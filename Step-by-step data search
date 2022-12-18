@@ -18,9 +18,31 @@ func main() {
 	}
 	defer resp.Body.Close()
 
+	rd := bufio.NewReader(resp.Body)
+	reader := csv.NewReader(rd)
+	reader.Comma = ';'
+
+	var data []string
+	for {
+		data, err = reader.Read()
+		if err == io.EOF {
+			os.Exit(0)
+		}
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+		for i, num := range data {
+			if num == "0" {
+				fmt.Println(i + 1)
+			}
+		}
+	}
+	
+	//часть после defer resp.Body.Close()
+/*
 	reader := bufio.NewReader(resp.Body)
 	var counter = 1
-
 	for {
 		partOfLine, err := reader.ReadString(';')
 		if err == io.EOF {
@@ -38,4 +60,5 @@ func main() {
 			counter++
 		}
 	}
+*/	
 }
