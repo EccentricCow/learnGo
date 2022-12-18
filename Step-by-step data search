@@ -1,0 +1,42 @@
+package main
+
+import (
+	"bufio"
+	"fmt"
+	"io"
+	"net/http"
+	"os"
+)
+
+const link = "https://raw.githubusercontent.com/semyon-dev/stepik-go/master/work_with_files/task_sep_1/task.data"
+
+func main() {
+	resp, err := http.Get(link)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	defer resp.Body.Close()
+
+	reader := bufio.NewReader(resp.Body)
+	var counter = 1
+
+	for {
+		partOfLine, err := reader.ReadString(';')
+		if err == io.EOF {
+			fmt.Println(err)
+			os.Exit(0)
+		} else if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+		fmt.Println(partOfLine)
+		switch partOfLine {
+		case "0":
+			fmt.Printf("The position of zero is %v", counter)
+			os.Exit(0)
+		default:
+			counter++
+		}
+	}
+}
