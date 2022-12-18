@@ -24,7 +24,6 @@ func main() {
 	for {
 		partOfLine, err := reader.ReadString(';')
 		if err == io.EOF {
-			fmt.Println(err)
 			os.Exit(0)
 		} else if err != nil {
 			fmt.Println(err)
